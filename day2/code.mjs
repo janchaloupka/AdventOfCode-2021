@@ -1,52 +1,21 @@
 import {readFileSync} from "fs";
 
-const lines = readFileSync("input", "utf8")
-    .split("\n")
+const lines = readFileSync("input", "utf8").trim().split("\n")
     .map(v => v
         .split(" ")
         .map((v, i) => i > 0 ? parseInt(v, 10) : v)
-    );
+    )
 
 // Part 1
-let depth = 0;
-let hor = 0;
-lines.forEach(v => {
-    switch (v[0]) {
-        case "down":
-            depth += v[1];
-            break;
-        case "up":
-            depth -= v[1];
-            break;
-        case "forward":
-            hor += v[1];
-            break;
-        default:
-            break;
-    }
-});
-
-console.log(depth * hor);
+console.log(lines // map => (depth, hor) diff
+    .map(v => v[0] == "down" ? [v[1], 0] : v[0] == "up" ? [-v[1], 0] : [0, v[1]])
+    .reduce((p, v) => [p[0] + v[0], p[1] + v[1]], [0, 0])
+    .reduce((p, v) => p * v)
+);
 
 // Part 2
-depth = 0;
-hor = 0;
-let aim = 0;
-lines.forEach(v => {
-    switch (v[0]) {
-        case "down":
-            aim += v[1];
-            break;
-        case "up":
-            aim -= v[1];
-            break;
-        case "forward":
-            hor += v[1];
-            depth += aim*v[1];
-            break;
-        default:
-            break;
-    }
-});
-
-console.log(depth * hor);
+console.log(lines // map => (aim, hor) diff
+    .map(v => v[0] == "down" ? [v[1], 0] : v[0] == "up" ? [-v[1], 0] : [0, v[1]])
+    .reduce((p, v, i, a) => v[1] == 0 ? p : [p[0] + v[1] * a.slice(0, i).reduce((p, v) => p + v[0], 0), p[1] + v[1]], [0, 0])
+    .reduce((p, v) => p * v)
+);
