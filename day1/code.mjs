@@ -12,9 +12,8 @@ console.log(lines
 
 // Part 2
 console.log(lines
-    .map((_, i, a) => i < 2 ? undefined : a
+    .map((_, i, a) => i < 2 ? -1 : a
         .slice(i-2, i+1)
         .reduce((p, v) => p + v))
-    .map((v, i, a) => i > 0 ? v > a[i-1] : 0)
-    .reduce((p, v) => p + v)
+    .reduce((p, v, i, a) => (i > 0 && v > a[i-1]) ? p + 1 : p)
 );
